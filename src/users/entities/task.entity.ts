@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
@@ -9,6 +15,7 @@ export class Task {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.tasks, { onDelete: 'SET NULL' })
+  @ManyToMany(() => User, (user) => user.tasks, { onDelete: 'SET NULL' })
+  @JoinTable()
   user: User;
 }

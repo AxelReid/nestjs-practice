@@ -19,7 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -45,18 +45,19 @@ export class UsersController {
     return this.usersService.findOne(username);
   }
 
-  @UseGuards(JwtAuthGuard)
   @ApiCreatedResponse({ type: User })
   @Post()
   createUser(@Body() body: CreateUserDto) {
     return this.usersService.create(body);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Patch(':id')
   updateUser(@Param('id') username: string, @Body() body: UpdateUserDto) {
     return this.usersService.update(username, body);
   }
 
+  @UseGuards(LocalAuthGuard)
   @Delete(':id')
   removeUser(@Param('id') username: string) {
     return this.usersService.delete(username);

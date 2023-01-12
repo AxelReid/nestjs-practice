@@ -1,17 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { File } from 'src/file-upload/entities/file.entity';
 import {
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
-  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Meeting } from './meeting.entity';
 import { Task } from './task.entity';
-import { UserProfile } from './user-profile.entity';
 
 @Entity()
 export class User {
@@ -25,25 +21,15 @@ export class User {
   username: string;
 
   @Column(/*{ select: false }*/)
+  @ApiProperty()
   password: string;
 
-  @ManyToOne(() => User, (user) => user.directReports, {
-    onDelete: 'SET NULL',
-  })
-  manager: User;
+  @Column({ default: false })
+  isAdmin: boolean;
 
-  @OneToMany(() => User, (user) => user.manager)
-  directReports: User[];
-
-  @OneToOne(() => UserProfile, (profile) => profile.user, {
-    eager: true, // automatically adds to relations
-  })
-  profile: UserProfile;
-
-  @OneToMany(() => Task, (task) => task.user, { cascade: true })
+  @ManyToMany(() => Task, (task) => task.user, { cascade: true })
   tasks: Task[];
 
-  @ManyToMany(() => Meeting, (meeting) => meeting.attendees)
-  @JoinTable()
-  meetings: Meeting[];
+  @OneToMany(() => File, (file) => file.user, { eager: true })
+  uploads: File[];
 }

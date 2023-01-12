@@ -12,24 +12,19 @@ import { GoogleStrategy } from './google.strategy';
 @Module({
   imports: [
     UsersModule,
-    PassportModule /*.register({ session: true })*/,
+    PassportModule,
     JwtModule.registerAsync({
       useFactory() {
         return {
           secret: jwtConstants().secret,
           signOptions: {
-            expiresIn: '60s',
+            expiresIn: '1h',
           },
         };
       },
     }),
   ],
-  providers: [
-    AuthService,
-    LocalStrategy /*SessionSerializer*/,
-    JwtStrategy,
-    GoogleStrategy,
-  ],
+  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}
