@@ -7,9 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { VersioningModule } from './versioning/versioning.module';
 import { AbilityModule } from './ability/ability.module';
-import { APP_GUARD } from '@nestjs/core';
-import { AbilitiesGuard } from './ability/guards/abilities.guard';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -19,12 +16,6 @@ import { AbilitiesGuard } from './ability/guards/abilities.guard';
     FileUploadModule,
     VersioningModule,
     AbilityModule,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AbilitiesGuard,
-    },
   ],
 })
 export class AppModule {}

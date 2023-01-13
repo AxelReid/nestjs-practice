@@ -19,6 +19,7 @@ import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { dest, fname } from './config/storageOptions';
 import { CheckAbilities } from 'src/ability/decorators/abilities.decorator';
 import { Action } from 'src/ability/action.enum';
+import { AbilitiesGuard } from 'src/ability/guards/abilities.guard';
 
 @Controller('file-upload')
 export class FileUploadController {
@@ -43,9 +44,9 @@ export class FileUploadController {
     return this.fileUploadservice.saveFiles(files, req.user.id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @CheckAbilities({ action: Action.Delete, subject: File })
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AbilitiesGuard)
+  @CheckAbilities({ action: Action.Delete, subject: File })
   deleteFile(@Param('id', ParseIntPipe) fileId: number) {
     return this.fileUploadservice.deleteFile(fileId);
   }

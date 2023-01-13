@@ -27,6 +27,7 @@ export class AbilitiesGuard implements CanActivate {
       ) || [];
 
     const { user } = context.switchToHttp().getRequest();
+    console.log('user ---> ', user);
 
     const ability = this.caslAbilityFactory.defineUser(user);
 

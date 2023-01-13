@@ -16,15 +16,16 @@ export type AppAbility = Ability<[Action, Subjects]>;
 @Injectable()
 export class AbilityFactory {
   defineUser(user: User) {
-    const { can, build } = new AbilityBuilder(
+    const { can, cannot, build } = new AbilityBuilder(
       Ability as AbilityClass<AppAbility>,
     );
 
-    if (user.isAdmin) {
+    if (user?.isAdmin) {
       can(Action.Manage, 'all');
     } else {
-      can(Action.Update, 'all', { userId: user.id });
-      can(Action.Delete, 'all', { userId: user.id });
+      can(Action.Read, 'all');
+      cannot(Action.Update, 'all', { userId: { $ne: user?.id } });
+      cannot(Action.Delete, 'all', { userId: { $ne: user?.id } });
     }
 
     return build({
