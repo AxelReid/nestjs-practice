@@ -17,9 +17,9 @@ import { File } from './entities/file.entity';
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { dest, fname } from './config/storageOptions';
-import { CheckAbilities } from 'src/ability/decorators/abilities.decorator';
 import { Action } from 'src/ability/action.enum';
-import { AbilitiesGuard } from 'src/ability/guards/abilities.guard';
+import { PoliciesGuard } from 'src/ability/guards/policies.guard';
+import { CheckPolicies } from 'src/ability/decorators/check-policies.decorator';
 
 @Controller('file-upload')
 export class FileUploadController {
@@ -45,8 +45,10 @@ export class FileUploadController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, AbilitiesGuard)
-  @CheckAbilities({ action: Action.Delete, subject: File })
+  // @UseGuards(JwtAuthGuard, AbilitiesGuard)
+  // @CheckAbilities({ action: Action.Delete, subject: File })
+  @UseGuards(JwtAuthGuard, PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Delete, File))
   deleteFile(@Param('id', ParseIntPipe) fileId: number) {
     return this.fileUploadservice.deleteFile(fileId);
   }

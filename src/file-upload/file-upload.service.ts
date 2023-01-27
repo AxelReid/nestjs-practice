@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { readdirSync, rmdirSync, unlinkSync } from 'fs';
 import { Repository } from 'typeorm';
@@ -10,6 +14,9 @@ export class FileUploadService {
   constructor(@InjectRepository(File) private fileRepo: Repository<File>) {}
 
   saveFiles(files: UploadFileDto[], userId: number) {
+    if (!files || !files.length)
+      throw new BadRequestException('No files selected');
+
     const newFiles = this.fileRepo.create(
       files.map((file) => ({ userId, ...file })),
     );

@@ -20,12 +20,17 @@ export class AbilityFactory {
       Ability as AbilityClass<AppAbility>,
     );
 
-    if (user?.isAdmin) {
+    if (user.isAdmin) {
       can(Action.Manage, 'all');
     } else {
       can(Action.Read, 'all');
-      cannot(Action.Update, 'all', { userId: { $ne: user?.id } });
-      cannot(Action.Delete, 'all', { userId: { $ne: user?.id } });
+
+      can(Action.Update, User, { id: user.id });
+      can(Action.Delete, User, { id: user.id });
+
+      can(Action.Update, File, { userId: user.id });
+
+      can(Action.Delete, File, { userId: user.id });
     }
 
     return build({
